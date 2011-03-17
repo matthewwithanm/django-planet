@@ -101,9 +101,13 @@ def process_feed(feed_url, create=False, category_title=None):
 
         feed_links = document.feed.get("links", [])
         if not blog_url:
-            link = filter(lambda item: item["rel"]=="alternate", feed_links)
+            link = filter(lambda item: item["rel"]=="self", feed_links)
             if link:
                 blog_url = link[0]["href"]
+            else:
+                link = filter(lambda item: item["rel"]=="alternate", feed_links)
+                if link:
+                    blog_url = link[0]["href"]
 
         blog, created = Blog.objects.get_or_create(
             url=blog_url, defaults={"title": title})
@@ -224,14 +228,26 @@ def process_feed(feed_url, create=False, category_title=None):
                         )
 
                     # create and store enclosures...
-                    if entry.get('media_thumbnail', False):
-                        mime_type, enc = mimetypes.guess_type(urlparse(entry.get('media_thumbnail').href).path)
+                    for media_thumbnail in entry.get('media_thumbnail', []):
+                        url = media_thumbnail.get('url')
+                        mime_type, enc = mimetypes.guess_type(urlparse(url).path)
+                        print urlparse(url).path
+                        print mimetypes.guess_type(urlparse(url).path)
+                        print '%s    --- %s' %(mime_type, enc)
                         post_enclosure, created = Enclosure.objects.get_or_create(
                             post=post,
                             length=0,
-                            mime_type=mime_type,
-                            link=entry.get('media_thumbnail').href
+                            mime_type=mime_type or '',
+                            link=url
                         )
+                    # if entry.get('media_thumbnail', False):
+                    #     mime_type, enc = mimetypes.guess_type(urlparse(entry.get('media_thumbnail').href).path)
+                    #     post_enclosure, created = Enclosure.objects.get_or_create(
+                    #         post=post,
+                    #         length=0,
+                    #         mime_type=mime_type,
+                    #         link=entry.get('media_thumbnail').href
+                    #     )
                     for enclosure_dict in entry.get("enclosures", []):
                         post_enclosure = Enclosure(
                             post=post,

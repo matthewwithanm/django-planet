@@ -97,7 +97,7 @@ class Feed(models.Model):
     # a site where this feed is published
     site = models.ForeignKey(Site, null=True, blank=True)
     # url to retrieve this feed
-    url = models.URLField(_("Url"), unique=True, db_index=True)
+    url = models.URLField(_("Url"), db_index=True, max_length=300)
     # title attribute from Feedparser's Feed object
     title = models.CharField(_("Title"), max_length=255, db_index=True,
                              blank=True, null=True)
@@ -240,7 +240,7 @@ class Post(models.Model):
         verbose_name = _("Post")
         verbose_name_plural = _("Posts")
         ordering = ('-date_created', '-date_modified')
-        unique_together = (('feed', 'guid'),)
+        # unique_together = (('feed', 'guid'),)
 
     def __unicode__(self):
         return u"%s [%s]" % (self.title, self.feed.title)
