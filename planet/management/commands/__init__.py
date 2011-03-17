@@ -231,9 +231,6 @@ def process_feed(feed_url, create=False, category_title=None):
                     for media_thumbnail in entry.get('media_thumbnail', []):
                         url = media_thumbnail.get('url')
                         mime_type, enc = mimetypes.guess_type(urlparse(url).path)
-                        print urlparse(url).path
-                        print mimetypes.guess_type(urlparse(url).path)
-                        print '%s    --- %s' %(mime_type, enc)
                         post_enclosure, created = Enclosure.objects.get_or_create(
                             post=post,
                             length=0,
