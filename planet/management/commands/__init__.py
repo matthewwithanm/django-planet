@@ -146,7 +146,7 @@ def process_feed(feed_url, create=False, category_title=None):
             feed_link, created = FeedLink.objects.get_or_create(
                 feed=planet_feed,
                 rel=link_dict.get("rel", "--"),
-                mime_type=link_dict.get("type"),
+                mime_type=link_dict.get("type") or '',
                 link=link_dict.get("href", blog_url)
             )
 
@@ -222,7 +222,7 @@ def process_feed(feed_url, create=False, category_title=None):
                         post_link, created = PostLink.objects.get_or_create(
                             post=post,
                             rel=link_dict.get("rel", "--"),
-                            mime_type=link_dict.get("type"),
+                            mime_type=link_dict.get("type", ""),
                             link=link_dict.get("href", "--"),
                             title=link_dict.get("title", "--")
                         )
