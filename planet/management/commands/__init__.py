@@ -170,7 +170,7 @@ def process_feed(feed_url, create=False, category_title=None):
             for entry in document.entries:
                 title = entry.get("title", "")
                 url = entry.get("link")
-                guid = entry.get("link")
+                guid = entry.get("id")
                 content = entry.get('description') or entry.get("content", [{"value": ""}])[0]["value"]
                 comments_url = entry.get("comments")
                 date_modified = entry.get("updated_parsed") or\
