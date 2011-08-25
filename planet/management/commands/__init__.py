@@ -182,7 +182,7 @@ def process_feed(feed_url, create=False, category_title=None):
                     date_modified = None
 
                 try:
-                    if len(Post.objects.filter(url=url, guid=guid)):
+                    if len(Post.objects.filter(feed=planet_feed, guid=guid)):
                         raise PostAlreadyExists
                     post = Post(title=title, url=url, guid=guid, content=content,
                         comments_url=comments_url, date_modified=date_modified,
